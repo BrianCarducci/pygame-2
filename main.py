@@ -2,6 +2,8 @@ import os
 import pygame
 import pyautogui
 
+from entities.player.player import Player
+
 
 def main():
     pygame.init()
@@ -9,12 +11,13 @@ def main():
     # os.environ['SDL_VIDEO_WINDOW_POS'] = str(0) + "," + str(20)
 
     WINDOW_WIDTH, WINDOW_HEIGHT = 2560, 1440
-    win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
     pygame.display.set_caption("My Game")
     pygame.init()
 
     player_sprite = pygame.image.load("assets/sprites/player/123.jpg")
+    player = Player(player_sprite, 10)
 
     # player = entities[0]
     text_surface = None
@@ -31,15 +34,15 @@ def main():
                 
         keys = pygame.key.get_pressed()
 
-        draw(player, entities, background, text_surface, win, WINDOW_WIDTH, WINDOW_HEIGHT, background_x, background_x2)
+        draw(window, player)
 
     pygame.quit()
 
 
-def draw():
-    win.fill((0, 0, 0))
+def draw(window, player):
+    window.fill((0, 0, 0))
 
-    win.blit(player.sprite, player.pos)
+    window.blit(player.sprite, (50, 50))
 
     # for entity in entities:
         # win.blit(background, (background_x, 0))
