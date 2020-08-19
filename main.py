@@ -19,9 +19,11 @@ def main():
 
     player_sprite = pygame.image.load("assets/sprites/player/123.jpg")
     player = Player(player_sprite, 100, 100, 10, False, 10, True)
+    print(player.rect)
 
     floor_sprite = pygame.image.load("assets/sprites/environment/floors/stone_wall.jpg")
     floor = Floor(floor_sprite, 100, 800, 0)
+    print(floor.rect)
 
     text_surface = None
 
@@ -36,6 +38,7 @@ def main():
             # if event.type == pygame.KEYDOWN:
                 
         player.check_player_action(pygame.key.get_pressed())
+        player.check_collision(floor)
 
         draw(window, player, floor)
 
@@ -45,9 +48,9 @@ def main():
 def draw(window, player, floor):
     window.fill((0, 0, 0))
 
-    window.blit(player.image, (player.x_loc, player.y_loc))
+    window.blit(player.image, (player.rect.x, player.rect.y))
 
-    # window.blit(floor.sprite, (floor.x_loc, floor.y_loc))
+    window.blit(floor.image, (floor.rect.x, floor.rect.y))
 
     # for entity in entities:
         # win.blit(background, (background_x, 0))
