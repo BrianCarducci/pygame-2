@@ -3,6 +3,7 @@ import pygame
 import pyautogui
 
 from entities.player.player import Player
+from entities.environment.floor import Floor
 
 
 def main():
@@ -17,13 +18,16 @@ def main():
     pygame.init()
 
     player_sprite = pygame.image.load("assets/sprites/player/123.jpg")
-    player = Player(player_sprite, 100, 100, 10)
+    player = Player(player_sprite, 100, 100, 10, False, 10, True)
+
+    floor_sprite = pygame.image.load("assets/sprites/environment/floors/stone_wall.jpg")
+    floor = Floor(floor_sprite, 100, 800, 0)
 
     text_surface = None
 
     run = True
     while run:
-        pygame.time.delay(25)
+        pygame.time.delay(30)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -33,15 +37,17 @@ def main():
                 
         player.check_player_action(pygame.key.get_pressed())
 
-        draw(window, player)
+        draw(window, player, floor)
 
     pygame.quit()
 
 
-def draw(window, player):
+def draw(window, player, floor):
     window.fill((0, 0, 0))
 
-    window.blit(player.sprite, (player.x_loc, player.y_loc))
+    window.blit(player.image, (player.x_loc, player.y_loc))
+
+    # window.blit(floor.sprite, (floor.x_loc, floor.y_loc))
 
     # for entity in entities:
         # win.blit(background, (background_x, 0))
