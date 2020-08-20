@@ -21,8 +21,8 @@ def main():
     player = Player(player_sprite, 100, 100, 10, False, 10, True)
     print(player.rect)
 
-    floor_sprite = pygame.image.load("assets/sprites/environment/floors/stone_wall.jpg")
-    floor = Floor(floor_sprite, 100, 800, 0)
+    floor_image = pygame.image.load("assets/sprites/environment/floors/stone_wall.jpg")
+    floor = Floor(floor_image, 100, 800, 0)
     print(floor.rect)
 
     text_surface = None

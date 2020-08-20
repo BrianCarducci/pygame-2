@@ -1,6 +1,6 @@
 import pygame
 
-from entities.entity import Entity
+from entities.environment.floor import Floor
 
 class Player(pygame.sprite.Sprite):
     collision_side = ""
@@ -14,19 +14,18 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x_loc
         self.rect.y = y_loc
-        self.x_loc = x_loc
-        self.y_loc = y_loc
         self.vel = vel
         self.is_jumping = is_jumping
         self.jump_count = jump_count
         self.is_falling = is_falling
 
     def check_player_action(self, keys):
+        if not self.is_jumping and {"collision_side": "bottom", "colliding_entity": Floor} not in self.collisions:
+            self.is_falling = True
+        else:
+            self.is_falling = False
         if self.is_falling:
             self.rect.y += self.vel
-        if self.collisions:
-            self.is_falling = False
-
         if keys[pygame.K_LEFT]:
             self.rect.x -= self.vel
             # self.x_loc -= self.vel
@@ -47,8 +46,9 @@ class Player(pygame.sprite.Sprite):
     def check_collision(self, sprite):
         self.collisions = []
         if self.rect.colliderect(sprite.rect):
-            if self.rect.bottom <= sprite.rect.top + self.jump_count:
+            if self.rect.bottom <= sprite.rect.top + self.vel:
                 self.collision_side = "bottom"
+                print("bottom")
             elif self.rect.right > sprite.rect.right:
                 self.collision_side = "left"
             elif self.rect.left - self.vel < sprite.rect.left:
