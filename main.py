@@ -2,8 +2,10 @@ import os
 import pygame
 import pyautogui
 
-from entities.player.player import Player
-from entities.environment.floor import Floor
+# from entities.player.player import Player
+# from entities.environment.floor import Floor
+
+from levels.level1 import setup
 
 
 def main():
@@ -11,21 +13,14 @@ def main():
 
     # os.environ['SDL_VIDEO_WINDOW_POS'] = str(0) + "," + str(20)
 
-    WINDOW_WIDTH, WINDOW_HEIGHT = 2560, 1440
-    window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    WINDOW_WIDTH, WINDOW_HEIGHT = pyautogui.size()
+    window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
 
     pygame.display.set_caption("My Game")
     pygame.init()
 
-    player_sprite = pygame.image.load("assets/sprites/player/123.jpg")
-    player = Player(player_sprite, 100, 100, 10, False, 10, True)
-    print(player.rect)
-
-    floor_image = pygame.image.load("assets/sprites/environment/floors/stone_wall.jpg")
-    floor = Floor(floor_image, 100, 800, 0)
-    print(floor.rect)
-
-    text_surface = None
+    player, environment = setup(WINDOW_WIDTH, WINDOW_HEIGHT)
+    sprite_groups = [environment]
 
     run = True
     while run:
@@ -36,30 +31,19 @@ def main():
                 run = False
                 break
             # if event.type == pygame.KEYDOWN:
-                
-        player.check_player_action(pygame.key.get_pressed())
-        player.check_collision(floor)
 
-        draw(window, player, floor)
+        draw(window, player, sprite_groups)
 
     pygame.quit()
 
 
-def draw(window, player, floor):
+def draw(window, player, sprite_groups):
     window.fill((0, 0, 0))
 
-    window.blit(player.image, (player.rect.x, player.rect.y))
+    player.update(window, pygame.key.get_pressed())
 
-    window.blit(floor.image, (floor.rect.x, floor.rect.y))
-
-    # for entity in entities:
-        # win.blit(background, (background_x, 0))
-        # win.blit(background, (background_x2, 0))
-
-    # if text_surface:
-    #     w, h = pygame.display.get_surface().get_size()
-    #     print("from get surface: " + str(win.get_width()) + ", " + str(win.get_height()))
-    #     win.blit(text_surface, (window_width//2, window_height//2))
+    for sprite_group in sprite_groups:
+        sprite_group.update(window)
 
     pygame.display.update()
 
