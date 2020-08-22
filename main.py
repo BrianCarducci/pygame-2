@@ -20,7 +20,7 @@ def main():
     pygame.init()
 
     player, environment = setup(WINDOW_WIDTH, WINDOW_HEIGHT)
-    sprite_groups = [environment]
+    # sprite_groups = [environment]
 
     run = True
     while run:
@@ -32,18 +32,19 @@ def main():
                 break
             # if event.type == pygame.KEYDOWN:
 
-        draw(window, player, sprite_groups)
+        draw(window, player, environment)
 
     pygame.quit()
 
 
-def draw(window, player, sprite_groups):
+def draw(window, player, sprite_group):
     window.fill((0, 0, 0))
 
-    player.update(window, pygame.key.get_pressed())
+    player.update(window, pygame.key.get_pressed(), sprite_group)
 
-    for sprite_group in sprite_groups:
-        sprite_group.update(window)
+    # for sprite_group in sprite_groups:
+    #     sprite_group.update(window)
+    sprite_group.update(window)
 
     pygame.display.update()
 
