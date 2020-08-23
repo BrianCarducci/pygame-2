@@ -15,6 +15,6 @@ def setup(window_width, window_height):
         floor_x_loc += floor_image.get_rect().w
 
     player_image = pygame.image.load("assets/sprites/player/123.jpg")
-    player = Player(player_image, window_width/2, 300, 10, False, 200, 200, False)
+    player = Player(player_image, window_width/2, 300, 10, False, 10, 10, False)
 
     return player, environment_sprite_group

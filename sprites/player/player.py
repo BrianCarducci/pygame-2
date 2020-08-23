@@ -31,19 +31,19 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += self.vel
         
         if not self.is_jumping and not self.is_falling:
-            if keys[pygame.K_SPACE]:
+            if keys[pygame.K_SPACE]:                                                                                  
                 self.is_jumping = True
         elif not self.is_falling:
             if self.jump_count <= 0:
-                self.is_falling = True
-                self.is_jumping = False
-                print("huh")
-                self.jump_count = self.base_jump_count
-            else:
-                print("jumping")
+                if {"collision_side": "bottom", "colliding_entity": Platform} in collisions:
+                    self.is_jumping = False
+                    self.jump_count = self.base_jump_count
+            if self.jump_count >= self.base_jump_count*-1 and self.is_jumping:
+                self.rect.y -= self.jump_count
                 self.jump_count -= 1
-                self.rect.y -= 1
-               
+            else:
+                self.is_jumping = False
+                self.jump_count = self.base_jump_count
         window.blit(self.image, (self.rect.x, self.rect.y))
 
     def check_collision(self, sprite_group):
