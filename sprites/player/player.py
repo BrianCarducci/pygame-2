@@ -4,6 +4,8 @@ from sprites.environment.platform import Platform
 
 class Player(pygame.sprite.Sprite):
 
+    fall_count = 0
+
     def __init__(self, image, x_loc, y_loc, vel, is_jumping, base_jump_count, jump_count, is_falling):
         pygame.sprite.Sprite.__init__(self)
         self.image = image
@@ -17,33 +19,43 @@ class Player(pygame.sprite.Sprite):
         self.is_falling = is_falling
 
     def update(self, window, keys, sprite_group):
+        player_actions = []
+
+        # Determines whether or not the player is falling
         collisions = self.check_collision(sprite_group)
         if not self.is_jumping and {"collision_side": "bottom", "collided_sprite": Platform} not in collisions:
             self.is_falling = True
         else:
+            self.fall_count = 0
             self.is_falling = False
         if self.is_falling:
-            self.rect.y += self.vel
+            self.fall_count -= 1
+            self.rect.y -= self.fall_count 
 
+        # 
         if keys[pygame.K_LEFT]:
-            self.rect.x -= self.vel
+            if {"collision_side": "left", "collided_sprite": Platform} not in collisions:
+                player_actions.append("left")
         if keys[pygame.K_RIGHT]:
-            self.rect.x += self.vel
-        
+            if {"collision_side": "right", "collided_sprite": Platform} not in collisions:
+                player_actions.append("right")
+            
+        # For all things jumping
         if not self.is_jumping and not self.is_falling:
             if keys[pygame.K_SPACE]:                                                                                  
                 self.is_jumping = True
         elif not self.is_falling:
             if self.jump_count <= 0:
-                if {"collision_side": "bottom", "colliding_entity": Platform} in collisions:
-                    self.is_jumping = False
-                    self.jump_count = self.base_jump_count
-            if self.jump_count >= self.base_jump_count*-1 and self.is_jumping:
+                self.is_falling = True
+                self.is_jumping = False
+            if self.is_jumping:
                 self.rect.y -= self.jump_count
                 self.jump_count -= 1
             else:
-                self.is_jumping = False
                 self.jump_count = self.base_jump_count
+
+        # Draw other sprites relative to player, then draws the player itself as well
+        sprite_group.update(window, player_actions, self.vel)
         window.blit(self.image, (self.rect.x, self.rect.y))
 
     def check_collision(self, sprite_group):
@@ -54,9 +66,14 @@ class Player(pygame.sprite.Sprite):
         collided_sprites = pygame.sprite.spritecollide(self, sprite_group, False)
 
         for collided_sprite in collided_sprites:
-            if self.rect.bottom >= collided_sprite.rect.top:
+            if self.rect.bottom == collided_sprite.rect.top:
                 collision_side = "bottom"
-
+                print("player bottom:" + str(self.rect.bottom))
+                print("floor top: " + str(collided_sprite.rect.top))
+            elif self.rect.right > collided_sprite.rect.right:
+                collision_side = "left"
+            elif self.rect.left < collided_sprite.rect.left:
+                collision_side = "right"
             collisions.append(
                 {
                     "collision_side": collision_side,
@@ -65,23 +82,3 @@ class Player(pygame.sprite.Sprite):
             )
 
         return collisions
-        
-
-                
-
-        # self.collisions = []
-        # if self.rect.colliderect(sprite.rect):
-        #     if self.rect.bottom <= sprite.rect.top + self.vel:
-        #         self.collision_side = "bottom"
-        #         print("bottom")
-        #     elif self.rect.right > sprite.rect.right:
-        #         self.collision_side = "left"
-        #     elif self.rect.left - self.vel < sprite.rect.left:
-        #         self.collision_side = "right"
-        #     self.collisions.append(
-        #         {
-        #             "collision_side": self.collision_side,
-        #             "colliding_entity": type(sprite)
-        #         }
-        #     )
-        

@@ -12,9 +12,13 @@ def setup(window_width, window_height):
     floor_x_loc = 0
     for i in range(20):
         environment_sprite_group.add(Platform(floor_image, floor_x_loc, base_floor_y_loc, 0))
+        if i == 15:
+            environment_sprite_group.add(Platform(floor_image, floor_x_loc, base_floor_y_loc - floor_image.get_rect().h, 0))
         floor_x_loc += floor_image.get_rect().w
 
+    
+
     player_image = pygame.image.load("assets/sprites/player/123.jpg")
-    player = Player(player_image, window_width/2, 300, 10, False, 10, 10, False)
+    player = Player(player_image, window_width/2, 300, 30, False, 30, 30, False)
 
     return player, environment_sprite_group

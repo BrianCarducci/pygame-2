@@ -2,9 +2,6 @@ import os
 import pygame
 import pyautogui
 
-# from entities.player.player import Player
-# from entities.environment.floor import Floor
-
 from levels.level1 import setup
 
 
@@ -24,7 +21,7 @@ def main():
 
     run = True
     while run:
-        pygame.time.delay(30)
+        pygame.time.delay(15)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -39,13 +36,7 @@ def main():
 
 def draw(window, player, sprite_group):
     window.fill((0, 0, 0))
-
     player.update(window, pygame.key.get_pressed(), sprite_group)
-
-    # for sprite_group in sprite_groups:
-    #     sprite_group.update(window)
-    sprite_group.update(window)
-
     pygame.display.update()
 
 
