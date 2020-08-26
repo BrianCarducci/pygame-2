@@ -23,12 +23,17 @@ class Player(pygame.sprite.Sprite):
 
         # Determines whether or not the player is falling
         collisions = self.check_collision(sprite_group)
+        if {"collision_side": "top", "collided_sprite": Platform} in collisions:
+            self.is_falling = True
+            self.is_jumping = False
+            self.jump_count = self.base_jump_count
         if not self.is_jumping and {"collision_side": "bottom", "collided_sprite": Platform} not in collisions:
             self.is_falling = True
         else:
             self.fall_count = 0
             self.is_falling = False
         if self.is_falling:
+            # self.collisions = []
             self.fall_count -= 1
             self.rect.y -= self.fall_count 
 
@@ -66,10 +71,12 @@ class Player(pygame.sprite.Sprite):
         collided_sprites = pygame.sprite.spritecollide(self, sprite_group, False)
 
         for collided_sprite in collided_sprites:
-            if self.rect.bottom == collided_sprite.rect.top:
+            # if self.rect.bottom <= collided_sprite.rect.top - self.fall_count:
+            if collided_sprite.rect.top - self.jump_count <=  self.rect.bottom <= collided_sprite.rect.top + self.jump_count:
                 collision_side = "bottom"
-                print("player bottom:" + str(self.rect.bottom))
-                print("floor top: " + str(collided_sprite.rect.top))
+            elif collided_sprite.rect.bottom - self.jump_count <= self.rect.top <= collided_sprite.rect.bottom + self.jump_count:
+                print("")
+                collision_side = "top"
             elif self.rect.right > collided_sprite.rect.right:
                 collision_side = "left"
             elif self.rect.left < collided_sprite.rect.left:

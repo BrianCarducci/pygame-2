@@ -14,6 +14,9 @@ def setup(window_width, window_height):
         environment_sprite_group.add(Platform(floor_image, floor_x_loc, base_floor_y_loc, 0))
         if i == 15:
             environment_sprite_group.add(Platform(floor_image, floor_x_loc, base_floor_y_loc - floor_image.get_rect().h, 0))
+        if i == 10:
+            environment_sprite_group.add(Platform(floor_image, floor_x_loc, base_floor_y_loc - floor_image.get_rect().h * 3, 0))
+
         floor_x_loc += floor_image.get_rect().w
 
     
